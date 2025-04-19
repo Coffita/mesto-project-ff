@@ -29,19 +29,18 @@ const cardTemplate = document.querySelector("#card-template").content;
 
 export function createCard(cardData, onDeleteCard, onLikeCard, onPreviewCard) {
   const newCard = cardTemplate.querySelector(".card").cloneNode(true);
+  const newCardImage = newCard.querySelector(".card__image");
+  const newCardTitle = newCard.querySelector(".card__title");
+  const newCardDeleteButton = newCard.querySelector(".card__delete-button");
+  const newCardLikeButton = newCard.querySelector(".card__like-button");
 
-  newCard.querySelector(".card__image").src = cardData.link;
-  newCard.querySelector(".card__image").alt = cardData.name;
-  newCard.querySelector(".card__title").textContent = cardData.name;
+  newCardImage.src = cardData.link;
+  newCardImage.alt = cardData.name;
+  newCardTitle.textContent = cardData.name;
 
-  const deleteButton = newCard.querySelector(".card__delete-button");
-  deleteButton.addEventListener("click", onDeleteCard);
-
-  const likeButton = newCard.querySelector(".card__like-button");
-  likeButton.addEventListener("click", onLikeCard);
-
-  const cardImage = newCard.querySelector(".card__image");
-  cardImage.addEventListener("click", onPreviewCard);
+  newCardDeleteButton.addEventListener("click", onDeleteCard);
+  newCardLikeButton.addEventListener("click", onLikeCard);
+  newCardImage.addEventListener("click", onPreviewCard);
 
   return newCard;
 }

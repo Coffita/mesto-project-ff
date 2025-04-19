@@ -17,15 +17,3 @@ export function handleEscClose(event) {
     closeModal(lastOpenedModal);
   }
 }
-
-document.addEventListener("click", (event) => {
-  if (event.target.classList.contains("popup__close")) {
-    closeModal(event.target.closest(".popup"));
-  }
-});
-
-document.addEventListener("click", (event) => {
-  if (event.target.classList.contains("popup")) {
-    closeModal(event.target);
-  }
-});

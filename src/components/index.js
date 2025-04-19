@@ -35,8 +35,7 @@ const cardPlaceLinkInput = cardFormElement.querySelector(
 );
 
 cardAddButton.addEventListener("click", () => {
-  cardPlaceNameInput.value = "";
-  cardPlaceLinkInput.value = "";
+  cardFormElement.reset();
   openModal(cardAddPopup);
 });
 
@@ -46,7 +45,7 @@ profileEditButton.addEventListener("click", () => {
   openModal(profileEditPopup);
 });
 
-function handleFormSubmit(event) {
+function handleProfileFormSubmit(event) {
   event.preventDefault();
 
   const name = profileNameInput.value;
@@ -58,7 +57,7 @@ function handleFormSubmit(event) {
   closeModal(profileEditPopup);
 }
 
-profileFormElement.addEventListener("submit", handleFormSubmit);
+profileFormElement.addEventListener("submit", handleProfileFormSubmit);
 
 function handleCardFormSubmit(event) {
   event.preventDefault();
@@ -71,17 +70,29 @@ function handleCardFormSubmit(event) {
 
   closeModal(cardAddPopup);
 
-  cardPlaceNameInput.value = "";
-  cardPlaceLinkInput.value = "";
+  event.target.reset();
 }
 
 cardFormElement.addEventListener("submit", handleCardFormSubmit);
 
 function previewCard(event) {
   previewPopupImage.src = event.target.src;
+  previewPopupImage.alt = event.target.alt;
   previewPopupCaption.textContent = event.target.alt;
   openModal(previewPopup);
 }
+
+document.addEventListener("click", (event) => {
+  if (event.target.classList.contains("popup__close")) {
+    closeModal(event.target.closest(".popup"));
+  }
+});
+
+document.addEventListener("click", (event) => {
+  if (event.target.classList.contains("popup")) {
+    closeModal(event.target);
+  }
+});
 
 for (const cardData of initialCards) {
   placesList.append(createCard(cardData, deleteCard, likeCard, previewCard));

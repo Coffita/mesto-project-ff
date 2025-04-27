@@ -2,19 +2,21 @@ import {
   fetchCards,
   fetchUser,
   updateUser,
-  likeCard,
-  deleteCard,
-  unlikeCard,
   postCard,
   updateUserAvatar,
 } from "./api";
-import { createCard } from "./card";
+import { createCard, handleDeleteCard, handleLikeCard } from "./card";
 import { closeModal, openModal } from "./modal";
-import {
-  clearValidation,
-  enableValidation,
-  validationConfig,
-} from "./validation";
+import { clearValidation, enableValidation } from "./validation";
+
+const validationConfig = {
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  submitButtonSelector: ".popup__button",
+  inactiveButtonClass: "popup__button_disabled",
+  inputErrorClass: "popup__input_type_error",
+  errorClass: "popup__error_visible",
+};
 
 const placesList = document.querySelector(".places__list");
 
@@ -93,9 +95,7 @@ function handleProfileFormSubmit(event) {
   const name = profileNameInput.value;
   const job = profileJobInput.value;
 
-  const submitButton = profileFormElement.querySelector(
-    ".popup__button[type='submit']"
-  );
+  const submitButton = event.submitter;
 
   toggleSubmitButtonState(submitButton, true);
 
@@ -118,9 +118,7 @@ function handleCardFormSubmit(event) {
   const name = cardPlaceNameInput.value;
   const link = cardPlaceLinkInput.value;
 
-  const submitButton = cardFormElement.querySelector(
-    ".popup__button[type='submit']"
-  );
+  const submitButton = event.submitter;
 
   toggleSubmitButtonState(submitButton, true);
 
@@ -153,9 +151,8 @@ function handleProfileAvatarFormSubmit(event) {
 
   const avatarLink = profileEditAvatarLinkInput.value;
 
-  const submitButton = profileEditAvatarForm.querySelector(
-    ".popup__button[type='submit']"
-  );
+  const submitButton = event.submitter;
+
   toggleSubmitButtonState(submitButton, true);
 
   updateUserAvatar(avatarLink)
@@ -184,32 +181,6 @@ function setUserElements(user) {
   profileTitle.textContent = user.name;
   profileDescription.textContent = user.about;
   profileAvatar.style.backgroundImage = `url(${user.avatar})`;
-}
-
-function handleDeleteCard(cardId, cardElement) {
-  deleteCard(cardId)
-    .then(() => {
-      cardElement.remove();
-    })
-    .catch((error) => console.log(error));
-}
-
-function handleLikeCard(cardId, likeButton, likeCounter) {
-  if (likeButton.classList.contains("card__like-button_is-active")) {
-    unlikeCard(cardId)
-      .then((res) => {
-        likeButton.classList.toggle("card__like-button_is-active");
-        likeCounter.textContent = res.likes.length;
-      })
-      .catch((error) => console.log(error));
-  } else {
-    likeCard(cardId)
-      .then((res) => {
-        likeButton.classList.toggle("card__like-button_is-active");
-        likeCounter.textContent = res.likes.length;
-      })
-      .catch((error) => console.log(error));
-  }
 }
 
 Promise.all([fetchUser(), fetchCards()])

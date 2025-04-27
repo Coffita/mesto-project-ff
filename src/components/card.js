@@ -1,3 +1,5 @@
+import { deleteCard, likeCard, unlikeCard } from "./api";
+
 const cardTemplate = document.querySelector("#card-template").content;
 
 export function createCard(
@@ -40,4 +42,30 @@ export function createCard(
   newCardImage.addEventListener("click", onPreviewCard);
 
   return newCard;
+}
+
+export function handleDeleteCard(cardId, cardElement) {
+  deleteCard(cardId)
+    .then(() => {
+      cardElement.remove();
+    })
+    .catch((error) => console.log(error));
+}
+
+export function handleLikeCard(cardId, likeButton, likeCounter) {
+  if (likeButton.classList.contains("card__like-button_is-active")) {
+    unlikeCard(cardId)
+      .then((res) => {
+        likeButton.classList.toggle("card__like-button_is-active");
+        likeCounter.textContent = res.likes.length;
+      })
+      .catch((error) => console.log(error));
+  } else {
+    likeCard(cardId)
+      .then((res) => {
+        likeButton.classList.toggle("card__like-button_is-active");
+        likeCounter.textContent = res.likes.length;
+      })
+      .catch((error) => console.log(error));
+  }
 }
